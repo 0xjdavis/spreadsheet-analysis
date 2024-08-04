@@ -73,7 +73,7 @@ def add_logo():
 
 add_logo()
 
-st.title('🦜🔗🎆👀💬 Langchain & OpenAI Chatbot with Plotly 3D Scatterplot of CSV Data')
+st.title('Langchain & OpenAI Chatbot with Plotly 3D Scatterplot of CSV Data')
 st.caption('')
 st.write('''
     This 3D scatterplot is based on 92 Oncology companies. Only 16 of have passed Phase 2 trial 
@@ -169,7 +169,7 @@ with st.expander('View Investor Frequency'):
 
 # ----------------------------------------------
 # IMAGE
-# st.image("pages/csv/investors.png")
+# st.image("csv/investors.png")
 
 # Function to encode the image
 def encode_image(image_path):
@@ -177,7 +177,7 @@ def encode_image(image_path):
     return base64.b64encode(image_file.read()).decode('utf-8')
 
 # Path to your image
-image_path = "pages/csv/investors.png"
+image_path = "csv/investors.png"
 
 # Getting the base64 string
 base64_image = encode_image(image_path)
