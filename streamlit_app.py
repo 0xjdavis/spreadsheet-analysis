@@ -84,7 +84,7 @@ st.write('''
 # ----------------------------------------------
 # PLOTLY VISUALIZATION
 # CSV DATA SOURCE
-df = pd.read_csv(r'pages/csv/investors.csv',index_col=[0])
+df = pd.read_csv(r'csv/investors.csv',index_col=[0])
 
 fig = px.scatter_3d(
   df,
