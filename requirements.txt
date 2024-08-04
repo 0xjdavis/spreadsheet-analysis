@@ -1,1 +1,13 @@
 streamlit
+
+pandas
+plotly.express
+# time
+openai
+# base64
+
+langchain
+
+# collections
+
+matplotlib
