@@ -188,7 +188,7 @@ if "messages" not in st.session_state:
     # ----------------------------------------------
     # client = OpenAI()
     response = client.chat.completions.create(
-        model="gpt-4-vision-preview",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "user",
@@ -237,7 +237,7 @@ if prompt := st.chat_input():
     st.chat_message("user").write(prompt)
 
     # INSERT LANGCHAIN AGENT
-    llm = ChatOpenAI(model_name='gpt-4-1106-preview', temperature=1, openai_api_key=openai_api_key)
+    llm = ChatOpenAI(model_name='gpt-4o-mini', temperature=1, openai_api_key=openai_api_key)
     agent = create_pandas_dataframe_agent(llm, df, verbose=True, agent_type=AgentType.OPENAI_FUNCTIONS)
     response = agent.run(prompt)
 
