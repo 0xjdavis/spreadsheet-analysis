@@ -24,54 +24,26 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as funcAnimation
 
-st.markdown(
-"""
-<style>
-    [data-testid="stSidebarNavItems"] li:nth-child(1) {
-        display: none;
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+st.sidebar.header("About App")
+st.sidebar.write("This is a data visualization and query chatbot using LangChain and OpenAI GPT 3.5 model to analyze data from a CSV by 0xjdavis.")
 
-def add_logo():
-    st.markdown(
-        """
-        <style>
-            [data-testid="stSidebarNav"] {
-                background-image: url(https://lh3.googleusercontent.com/a/ACg8ocK_OgY-g9V-VG07tj59v_RE9qBRNxWFmSjTk7DbIViw5IA=s260-c-no);
-                background-repeat: no-repeat;
-                background-size: 100px 100px;
-                padding-top: 60px;
-                background-position: 120px 50px;
-            }
-            [data-testid="stSidebarNav"]::before {
-                content: "AI, ML, & Prompt Engineering";
-                padding-bottom: 30px;
-                font-size: 18px;
-                display: flex;
-                justify-content: center;
-                position: relative;
-                top: 100px;
-            }[data-testid="stSidebarNav"]::after {
-                content: "© 2023-2024 J. Davis";
-                width: 100%;
-                font-size: 14px;
-                justify-content: center;
-                display: flex;
-                position: relative;
-                top: 100px;
-            }
-            [data-testid="stSidebarNavLink"] span {
-                font-size: 11px;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+# Calendly
+st.sidebar.markdown("""
+    <hr />
+    <center>
+    <div style="border-radius:8px;padding:8px;background:#fff";width:100%;">
+    <img src="https://avatars.githubusercontent.com/u/98430977" alt="Oxjdavis" height="100" width="100" border="0" style="border-radius:50%"/>
+    <br />
+    <span style="height:12px;width:12px;background-color:#77e0b5;border-radius:50%;display:inline-block;"></span> <b>I'm available for new projects!</b><br />
+    <a href="https://calendly.com/0xjavis" target="_blank"><button style="background:#126ff3;color:#fff;border: 1px #126ff3 solid;border-radius:8px;padding:8px 16px;margin:10px 0">Schedule a call</button></a><br />
+    </div>
+    </center>
+    <br />
+""", unsafe_allow_html=True)
 
-add_logo()
+# Copyright
+st.sidebar.caption("©️ Copyright 2024 J. Davis")
+
 
 st.title('Langchain & OpenAI Chatbot with Plotly 3D Scatterplot of CSV Data')
 st.caption('')
