@@ -25,7 +25,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as funcAnimation
 
 st.sidebar.header("About App")
-st.sidebar.write("This is a data visualization and query chatbot using LangChain and OpenAI GPT 3.5 model to analyze data from a CSV by 0xjdavis.")
+st.sidebar.write("This is a data visualization and query chatbot using Plotly, LangChain, and OpenAI GPT 3.5 model to analyze data from a CSV by 0xjdavis.")
 
 # Calendly
 st.sidebar.markdown("""
@@ -90,16 +90,6 @@ plt.pie(df['Marketcap'], labels=df['Company'], autopct='%1.1f%%', startangle=140
 plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 plt.title('Market Capitalization by Company')
 plt.show()
-
-
-
-
-
-
-
-
-
-
 
 
 # ----------------------------------------------
