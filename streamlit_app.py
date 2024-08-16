@@ -23,9 +23,19 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as funcAnimation
+ 
 
+# Setting page layout
+st.set_page_config(
+    page_title="Data Visualization Analysis Chatbot with Langchain, OpenAI and a Plotly 3D Scatterplot of CSV Data",
+    page_icon="✨",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
+
+# Sidebar for API Key and User Info
 st.sidebar.header("About App")
-st.sidebar.write("This is a data visualization and query chatbot using Plotly, LangChain, and OpenAI GPT 3.5 model to analyze data from a CSV by 0xjdavis.")
+st.sidebar.markdown('This is a data visualization analysis chatbot using Plotly, LangChain, and OpenAI GPT 3.5 model to analyze data from a CSV created by <a href="https://ai.jdavis.xyz" target="_blank">0xjdavis</a>.', unsafe_allow_html=True)
 
 # Calendly
 st.sidebar.markdown("""
