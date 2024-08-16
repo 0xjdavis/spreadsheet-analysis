@@ -2,7 +2,7 @@
 
 Langchain & OpenAI Chatbot with Plotly 3D Scatterplot of CSV Data
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://video-vision.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://data-visualization-chatbot.streamlit.app/)
 
 
 ### How to run it on your own machine
