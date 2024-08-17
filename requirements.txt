@@ -2,16 +2,13 @@ streamlit
 
 pandas
 plotly.express
-# time
+
 openai
-# base64
 
 langchain
 langchain-community
 langchain-experimental
 
 tabulate
-
-# collections
 
 matplotlib
