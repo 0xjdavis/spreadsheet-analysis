@@ -7,8 +7,9 @@ openai
 # base64
 
 langchain
-langchain_community
-langchain_experimental
+langchain-community
+langchain-experimental
+
 
 # collections
 
