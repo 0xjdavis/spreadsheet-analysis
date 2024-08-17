@@ -11,7 +11,7 @@ client = OpenAI(api_key=openai_api_key)
 import base64
 
 from langchain.chat_models import ChatOpenAI
-from langchain.agents import create_pandas_dataframe_agent
+from langchain_experimental.agents import create_pandas_dataframe_agent
 from langchain.agents.agent_types import AgentType
 
 from collections import Counter
