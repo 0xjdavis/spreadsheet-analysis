@@ -10,6 +10,7 @@ langchain
 langchain-community
 langchain-experimental
 
+tabulate
 
 # collections
 
