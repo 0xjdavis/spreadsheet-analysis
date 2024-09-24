@@ -1,24 +1,59 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from transformers import LlamaForCausalLM, LlamaTokenizer
+from groq.client import GroqClient
+
+# Initialize the Groq client and the llama3-8b-8192 model
+groq_client = GroqClient()
+model = LlamaForCausalLM.from_pretrained("decapoda-research/llama3-8b-8192")
+tokenizer = LlamaTokenizer.from_pretrained("decapoda-research/llama3-8b-8192")
+
+def chatbot_response(user_input, df):
+    # Use the Groq client and the llama3-8b-8192 model to generate a response
+    prompt = f"User: {user_input}\nAssistant: Let me analyze the provided spreadsheet to help answer your question. Here's what I found:"
+    input_ids = tokenizer.encode(prompt, return_tensors="pt")
+    output = model.generate(input_ids, max_length=1024, num_return_sequences=1, do_sample=True, top_k=50, top_p=0.95, num_beams=5)
+    response = tokenizer.decode(output[0], skip_special_tokens=True)
+
+    # Perform additional analysis and generate visualizations based on the user's input
+    takeaways = analyze_spreadsheet(df)
+    response += "\n\nKey Takeaways:\n"
+    for takeaway in takeaways:
+        response += f"- {takeaway}\n"
+
+    return response
 
 def analyze_spreadsheet(df):
     # Detect and report on data patterns, trends, and key takeaways
     st.subheader("Data Analysis")
     
     # Example analysis:
-    st.write(f"The dataset has {df.shape[0]} rows and {df.shape[1]} columns.")
+    row_count = df.shape[0]
+    col_count = df.shape[1]
+    missing_values = df.isna().sum().sum()
+
+    st.write(f"The dataset has {row_count} rows and {col_count} columns.")
     st.write(f"The dataset contains the following columns: {', '.join(df.columns)}")
-    st.write(f"The dataset has {df.isna().sum().sum()} missing values.")
+    st.write(f"The dataset has {missing_values} missing values.")
 
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
     fig = px.line(df, x=df.columns[0], y=df.columns[1], title='Trend Analysis')
     st.plotly_chart(fig)
 
-    st.write("Key Takeaways:")
-    st.write("- The data shows a positive trend over time.")
-    st.write("- There are a few outliers that may need further investigation.")
+    # Generate dynamic key takeaways
+    takeaways = []
+    if row_count > 1000:
+        takeaways.append("The dataset is quite large, with over 1,000 rows. This may require additional processing power or sampling to analyze efficiently.")
+    if missing_values > 0:
+        takeaways.append(f"The dataset contains {missing_values} missing values, which may need to be handled before further analysis.")
+    if df[df.columns[1]].std() > 1000:
+        takeaways.append("The data shows high variability in the second column, which could indicate the presence of outliers or unusual data points.")
+    if df[df.columns[1]].mean() > 10000:
+        takeaways.append("The average value in the second column is quite high, suggesting the data may represent high-value items or transactions.")
+
+    return takeaways
 
 def main():
     st.title("Spreadsheet Analysis Chatbot")
@@ -33,8 +68,11 @@ def main():
         else:
             df = pd.read_excel(uploaded_file)
 
-        # Analyze the spreadsheet data and display the results
-        analyze_spreadsheet(df)
+        # Add chatbot functionality
+        user_input = st.text_input("Ask me anything about the spreadsheet:", "")
+        if user_input:
+            chatbot_response = chatbot_response(user_input, df)
+            st.write(chatbot_response)
 
 if __name__ == "__main__":
     main()
