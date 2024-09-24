@@ -97,9 +97,9 @@ def analyze_spreadsheet(df):
 
     # KPI 3 - Top 10 countries
     with col3:
-        st.subheader("Top 10 Countries")
-        top_countries = df.groupby(df.columns[4]).size().sort_values(ascending=False).head(10)
-        fig = px.bar(top_countries, x=top_countries.index, y=top_countries.values)
+        st.subheader("School Referrals")
+        top_referrals = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(10)
+        fig = px.bar(top_referrals, x=top_referrals.index, y=top_referrals.values)
         st.plotly_chart(fig, use_container_width=True)
 
     # Generate dynamic key takeaways
