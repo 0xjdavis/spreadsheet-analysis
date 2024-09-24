@@ -32,8 +32,8 @@ The second half of the page should be divided into three different sections show
 
 Look at the funnel over time. 
 - Identify trends and highlight them in your charts
-- Display what is obvious.
-- Are there any patterns in the type of help requested  over time?
+- Did first time takers of the BAR purchase more often than people who took it multiple times?
+- Are there any patterns in the type of help requested over time?
 - Display what is not obvious. Remember you see things others do not. Look harder to identify patterns.
 
 Are we getting more or less inquiries scheduled per inquiry, purchase per call/inquirey, etc...
