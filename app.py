@@ -53,7 +53,11 @@ def analyze_spreadsheet(df):
     st.write(f"The dataset has {missing_values} missing values.")
 
     # Convert the date column to datetime
-    df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
+    try:
+        df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
+    except ValueError:
+        st.write("There was an issue parsing the date column. Please ensure the date format is correct.")
+        return
 
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
@@ -120,9 +124,10 @@ def main():
         if user_input:
             response = "Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n"
             takeaways = analyze_spreadsheet(df)
-            response += "Key Takeaways:\n"
-            for takeaway in takeaways:
-                response += f"- {takeaway}\n"
+            if takeaways is not None:
+                response += "Key Takeaways:\n"
+                for takeaway in takeaways:
+                    response += f"- {takeaway}\n"
             st.write(response)
 
 if __name__ == "__main__":
