@@ -38,20 +38,30 @@ def analyze_spreadsheet(df):
     st.write(f"Columns: {', '.join(df.columns)}")
     st.write(f"Missing values: {missing_values}")
 
-    # Ensure the date column is a valid datetime format
+    # Ensure the date column is a valid datetime format and handle errors
     try:
-        df['Date'] = pd.to_datetime(df['Date'], format='%B %d, %Y at %I:%M %p')
+        # Coerce invalid dates to NaT
+        df['Date'] = pd.to_datetime(df['Date'], format='%B %d, %Y at %I:%M %p', errors='coerce')
         st.write("Successfully parsed the date column.")
     except Exception as e:
         st.write(f"Error parsing the date column: {e}")
         return None
 
+    # Handle missing or invalid dates
+    missing_dates = df['Date'].isna().sum()
+    if missing_dates > 0:
+        st.write(f"Warning: {missing_dates} rows have invalid or missing dates and will be excluded.")
+        df = df.dropna(subset=['Date'])
+
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
 
-    # Top panel - Trend Analysis (Time Series)
-    fig = px.line(df, x=df.columns[0], y=df.columns[1], title='Trend Analysis Over Time')
-    st.plotly_chart(fig, use_container_width=True)
+    # Top panel - Trend Analysis
+    if not df.empty:
+        fig = px.line(df, x='Date', y=df.columns[1], title='Trend Analysis')
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.write("No data available for trend analysis due to missing or invalid dates.")
 
     # Lower panel - KPI visualizations
     col1, col2, col3 = st.columns(3)
@@ -77,16 +87,16 @@ def analyze_spreadsheet(df):
         fig = px.bar(top_countries, x=top_countries.index, y=top_countries.values)
         st.plotly_chart(fig, use_container_width=True)
 
-    # Generate key takeaways dynamically
+    # Generate dynamic key takeaways
     takeaways = []
     if row_count > 1000:
-        takeaways.append("The dataset is large, with over 1,000 rows, which may require more processing.")
+        takeaways.append("The dataset is quite large, with over 1,000 rows. This may require additional processing power or sampling to analyze efficiently.")
     if missing_values > 0:
-        takeaways.append(f"There are {missing_values} missing values.")
+        takeaways.append(f"The dataset contains {missing_values} missing values, which may need to be handled before further analysis.")
     if df[df.columns[1]].std() > 1000:
-        takeaways.append("High variability detected in the data, suggesting potential outliers.")
+        takeaways.append("The data shows high variability in the second column, which could indicate the presence of outliers or unusual data points.")
     if df[df.columns[1]].mean() > 10000:
-        takeaways.append("The average value is high, indicating high-value items or transactions.")
+        takeaways.append("The average value in the second column is quite high, suggesting the data may represent high-value items or transactions.")
 
     return takeaways
 
