@@ -83,22 +83,22 @@ def analyze_spreadsheet(df):
 
     # KPI 1 - Top 10 individuals who purchased the most
     with col1:
-        st.subheader("Top 10 Purchasers")
-        top_purchasers = df.groupby(df.columns[2]).size().sort_values(ascending=False).head(10)
+        st.subheader("Top 25 Purchasers")
+        top_purchasers = df.groupby(df.columns[2]).size().sort_values(ascending=False).head(25)
         fig = px.bar(top_purchasers, x=top_purchasers.index, y=top_purchasers.values)
         st.plotly_chart(fig, use_container_width=True)
 
     # KPI 2 - Top 10 law schools attended
     with col2:
-        st.subheader("Top 10 Law Schools")
-        top_law_schools = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(10)
+        st.subheader("Top 25 Law Schools")
+        top_law_schools = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(25)
         fig = px.bar(top_law_schools, x=top_law_schools.index, y=top_law_schools.values)
         st.plotly_chart(fig, use_container_width=True)
 
     # KPI 3 - Top 10 countries
     with col3:
-        st.subheader("School Referrals")
-        top_referrals = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(10)
+        st.subheader("Top 25 School Referrals")
+        top_referrals = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(25)
         fig = px.bar(top_referrals, x=top_referrals.index, y=top_referrals.values)
         st.plotly_chart(fig, use_container_width=True)
 
