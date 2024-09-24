@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-#from transformers import LlamaForCausalLM, LlamaTokenizer
 import groq
 
 # Initialize the Groq client and the llama3-8b-8192 model
@@ -12,15 +11,12 @@ model = st.sidebar.selectbox(
     "Select a model:",
     ("llama3-8b-8192", "llama3-groq-70b-8192-tool-use-preview", "mixtral-8x7b-32768", "gemma-7b-it"),
 )
-# model = LlamaForCausalLM.from_pretrained("decapoda-research/llama3-8b-8192")
-# tokenizer = LlamaTokenizer.from_pretrained("decapoda-research/llama3-8b-8192")
 
 def chatbot_response(user_input, df):
     # Use the Groq client and the llama3-8b-8192 model to generate a response
     prompt = f"User: {user_input}\nAssistant: Let me analyze the provided spreadsheet to help answer your question. Here's what I found:"
-    input_ids = tokenizer.encode(prompt, return_tensors="pt")
-    output = model.generate(input_ids, max_length=1024, num_return_sequences=1, do_sample=True, top_k=50, top_p=0.95, num_beams=5)
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
+    output = groq_client.generate(model, prompt, max_length=1024, num_return_sequences=1, do_sample=True, top_k=50, top_p=0.95, num_beams=5)
+    response = output.generated_text
 
     # Perform additional analysis and generate visualizations based on the user's input
     takeaways = analyze_spreadsheet(df)
