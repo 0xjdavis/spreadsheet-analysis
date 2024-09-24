@@ -38,9 +38,9 @@ def analyze_spreadsheet(df):
     st.write(f"Columns: {', '.join(df.columns)}")
     st.write(f"Missing values: {missing_values}")
 
-    # Ensure the first column is a valid datetime format
+    # Ensure the date column is a valid datetime format
     try:
-        df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
+        df['Date'] = pd.to_datetime(df['Date'], format='%B %d, %Y at %I:%M %p')
         st.write("Successfully parsed the date column.")
     except Exception as e:
         st.write(f"Error parsing the date column: {e}")
