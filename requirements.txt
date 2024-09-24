@@ -5,6 +5,7 @@ plotly.express
 
 openpyxl
 transformers
+torch
 
 anthropic
 groq
