@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import groq
 from datetime import datetime
+import time
 
 # Initialize the Groq client and the llama3-8b-8192 model
 groq_client = groq.Groq(api_key=st.secrets["GROQ_KEY"])
@@ -57,7 +58,7 @@ def analyze_spreadsheet(df):
         df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
     except ValueError:
         st.write("There was an issue parsing the date column. Please ensure the date format is correct.")
-        return
+        return None
 
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
@@ -123,7 +124,8 @@ def main():
         user_input = st.text_input("Ask me anything about the spreadsheet:", "")
         if user_input:
             response = "Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n"
-            takeaways = analyze_spreadsheet(df)
+            with st.spinner("Analyzing the spreadsheet..."):
+                takeaways = analyze_spreadsheet(df)
             if takeaways is not None:
                 response += "Key Takeaways:\n"
                 for takeaway in takeaways:
