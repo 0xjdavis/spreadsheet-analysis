@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from transformers import LlamaForCausalLM, LlamaTokenizer
-from groq.client import GroqClient
+import groq
 
 # Initialize the Groq client and the llama3-8b-8192 model
-groq_client = GroqClient()
+groq_client = groq.Groq(api_key=st.secrets["GROQ_KEY"])
 model = LlamaForCausalLM.from_pretrained("decapoda-research/llama3-8b-8192")
 tokenizer = LlamaTokenizer.from_pretrained("decapoda-research/llama3-8b-8192")
 
