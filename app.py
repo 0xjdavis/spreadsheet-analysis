@@ -6,8 +6,14 @@ import groq
 
 # Initialize the Groq client and the llama3-8b-8192 model
 groq_client = groq.Groq(api_key=st.secrets["GROQ_KEY"])
-model = LlamaForCausalLM.from_pretrained("decapoda-research/llama3-8b-8192")
-tokenizer = LlamaTokenizer.from_pretrained("decapoda-research/llama3-8b-8192")
+
+# Select Groq Model
+model = st.sidebar.selectbox(
+    "Select a model:",
+    ("llama3-8b-8192", "llama3-groq-70b-8192-tool-use-preview", "mixtral-8x7b-32768", "gemma-7b-it"),
+)
+# model = LlamaForCausalLM.from_pretrained("decapoda-research/llama3-8b-8192")
+# tokenizer = LlamaTokenizer.from_pretrained("decapoda-research/llama3-8b-8192")
 
 def chatbot_response(user_input, df):
     # Use the Groq client and the llama3-8b-8192 model to generate a response
