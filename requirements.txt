@@ -4,6 +4,7 @@ pandas
 plotly.express
 
 openpyxl
+transformers
 
 anthropic
 groq
