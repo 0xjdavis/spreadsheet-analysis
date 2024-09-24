@@ -3,6 +3,10 @@ streamlit
 pandas
 plotly.express
 
+openpyxl
+
+anthropic
+groq
 openai
 
 langchain
