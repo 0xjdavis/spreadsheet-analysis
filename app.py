@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import groq
 from datetime import datetime
-import time
 
 # Initialize the Groq client and the llama3-8b-8192 model
 groq_client = groq.Groq(api_key=st.secrets["GROQ_KEY"])
@@ -15,56 +13,44 @@ model = st.sidebar.selectbox(
     ("llama3-8b-8192", "llama3-groq-70b-8192-tool-use-preview", "mixtral-8x7b-32768", "gemma-7b-it"),
 )
 
+# System prompt for display
 system_prompt = '''
-You are the world's best data analysts. You are not only an INTP making up a small percentage of the personalities, but you are specially trained in graphic design and engineering. Your clients include Apple, Microsoft and you were awarded recently for your contributions to the field of User Experience Design by Jakob Nielsen.
-You have access to python library (pychart) and are a master designer when it comes to visualizing data in the form of data driven dashboards.
-You can visualize data and flow using code interpreter and js librarires.
+You are the world's best data analysts. You are not only an INTP making up a small percentage of the personalities, 
+but you are specially trained in graphic design and engineering. 
+Your clients include Apple, Microsoft, and you were awarded recently for your contributions to the field of User Experience Design by Jakob Nielsen.
+You can visualize data and flow using code interpreter and JS libraries.
 
 Help me make sense of this spreadsheet.
-It is a list of people that hasve contacted us about tutoring and scheduled a call who purchased.
-This needs to be visualised in a chart over time.
-
-Create a dashboard where the top panel extends the entire witdth of the page but only half the height of the page.
-Fill that section of the page with whatever chart you think will tell the best story reflecting the data.
-The second half of the page should be divided into three different sections showing three KPI.
-- KPI 1 Top 10 individuals who purchased the most over time ranked, from most to least.
-- KPI 2 Top 10 law schools attended by people who purchased the most over time, ranked from most to least.
-- KPI 3 Top 10 countries that individuals who purchased the most over time were from, ranked from most to least.
-
-Look at the funnel over time.
-- Identify trends and highlight them in your charts
-- Display what is obvious.
-- Display what is not obvious. Remember you see things others do not. Look harder to identify patterns.
-
-Are we getting more or less inquiries scheduled per inquiry, purchase per call/inquirey, etc...
-Tell me what is and is not obvious.
+It is a list of people who have contacted us about tutoring and scheduled a call who purchased.
+This needs to be visualized in a chart over time, along with three KPIs.
 '''
 
 def analyze_spreadsheet(df):
-    # Detect and report on data patterns, trends, and key takeaways
+    """Analyze the spreadsheet data and generate insights and visualizations."""
     st.subheader("Data Analysis")
-    
-    # Example analysis:
+
+    # Display basic data information
     row_count = df.shape[0]
     col_count = df.shape[1]
     missing_values = df.isna().sum().sum()
 
     st.write(f"The dataset has {row_count} rows and {col_count} columns.")
-    st.write(f"The dataset contains the following columns: {', '.join(df.columns)}")
-    st.write(f"The dataset has {missing_values} missing values.")
+    st.write(f"Columns: {', '.join(df.columns)}")
+    st.write(f"Missing values: {missing_values}")
 
-    # Convert the date column to datetime
+    # Ensure the first column is a valid datetime format
     try:
         df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
-    except ValueError:
-        st.write("There was an issue parsing the date column. Please ensure the date format is correct.")
+        st.write("Successfully parsed the date column.")
+    except Exception as e:
+        st.write(f"Error parsing the date column: {e}")
         return None
 
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
 
-    # Top panel - Trend Analysis
-    fig = px.line(df, x=df.columns[0], y=df.columns[1], title='Trend Analysis')
+    # Top panel - Trend Analysis (Time Series)
+    fig = px.line(df, x=df.columns[0], y=df.columns[1], title='Trend Analysis Over Time')
     st.plotly_chart(fig, use_container_width=True)
 
     # Lower panel - KPI visualizations
@@ -91,26 +77,26 @@ def analyze_spreadsheet(df):
         fig = px.bar(top_countries, x=top_countries.index, y=top_countries.values)
         st.plotly_chart(fig, use_container_width=True)
 
-    # Generate dynamic key takeaways
+    # Generate key takeaways dynamically
     takeaways = []
     if row_count > 1000:
-        takeaways.append("The dataset is quite large, with over 1,000 rows. This may require additional processing power or sampling to analyze efficiently.")
+        takeaways.append("The dataset is large, with over 1,000 rows, which may require more processing.")
     if missing_values > 0:
-        takeaways.append(f"The dataset contains {missing_values} missing values, which may need to be handled before further analysis.")
+        takeaways.append(f"There are {missing_values} missing values.")
     if df[df.columns[1]].std() > 1000:
-        takeaways.append("The data shows high variability in the second column, which could indicate the presence of outliers or unusual data points.")
+        takeaways.append("High variability detected in the data, suggesting potential outliers.")
     if df[df.columns[1]].mean() > 10000:
-        takeaways.append("The average value in the second column is quite high, suggesting the data may represent high-value items or transactions.")
+        takeaways.append("The average value is high, indicating high-value items or transactions.")
 
     return takeaways
 
 def main():
     st.title("Spreadsheet Analysis Chatbot")
 
-    # Display system prompt
+    # Display the system prompt
     st.markdown(system_prompt)
 
-    # Allow user to upload a spreadsheet
+    # Allow the user to upload a spreadsheet
     uploaded_file = st.file_uploader("Upload a spreadsheet", type=["xlsx", "csv"])
 
     if uploaded_file is not None:
@@ -120,17 +106,18 @@ def main():
         else:
             df = pd.read_excel(uploaded_file)
 
-        # Add chatbot functionality
+        # User input for specific questions about the data
         user_input = st.text_input("Ask me anything about the spreadsheet:", "")
+
         if user_input:
-            response = "Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n"
+            st.write("Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n")
             with st.spinner("Analyzing the spreadsheet..."):
                 takeaways = analyze_spreadsheet(df)
+
             if takeaways is not None:
-                response += "Key Takeaways:\n"
+                st.subheader("Key Takeaways")
                 for takeaway in takeaways:
-                    response += f"- {takeaway}\n"
-            st.write(response)
+                    st.write(f"- {takeaway}")
 
 if __name__ == "__main__":
     main()
