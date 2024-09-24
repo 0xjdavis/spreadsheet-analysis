@@ -1,4 +1,4 @@
-# 🎈 Visualized Data Analysis Chatbot
+# 🎈 Spreadsheet Analysis Chatbot
 
 Spreasdsheet Analysis with Langchain & OpenAI Chatbot with Plotly
 
