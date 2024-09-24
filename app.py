@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import groq
+from datetime import datetime
 
 # Initialize the Groq client and the llama3-8b-8192 model
 groq_client = groq.Groq(api_key=st.secrets["GROQ_KEY"])
@@ -50,6 +51,9 @@ def analyze_spreadsheet(df):
     st.write(f"The dataset has {row_count} rows and {col_count} columns.")
     st.write(f"The dataset contains the following columns: {', '.join(df.columns)}")
     st.write(f"The dataset has {missing_values} missing values.")
+
+    # Convert the date column to datetime
+    df[df.columns[0]] = pd.to_datetime(df[df.columns[0]])
 
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
