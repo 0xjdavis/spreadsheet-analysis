@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from transformers import LlamaForCausalLM, LlamaTokenizer
+#from transformers import LlamaForCausalLM, LlamaTokenizer
 import groq
 
 # Initialize the Groq client and the llama3-8b-8192 model
