@@ -12,20 +12,6 @@ model = st.sidebar.selectbox(
     ("llama3-8b-8192", "llama3-groq-70b-8192-tool-use-preview", "mixtral-8x7b-32768", "gemma-7b-it"),
 )
 
-def chatbot_response(user_input, df):
-    # Use the Groq client and the llama3-8b-8192 model to generate a response
-    prompt = f"User: {user_input}\nAssistant: Let me analyze the provided spreadsheet to help answer your question. Here's what I found:"
-    output = groq_client.generate(model, prompt, max_length=1024, num_return_sequences=1, do_sample=True, top_k=50, top_p=0.95, num_beams=5)
-    response = output.generated_text
-
-    # Perform additional analysis and generate visualizations based on the user's input
-    takeaways = analyze_spreadsheet(df)
-    response += "\n\nKey Takeaways:\n"
-    for takeaway in takeaways:
-        response += f"- {takeaway}\n"
-
-    return response
-
 def analyze_spreadsheet(df):
     # Detect and report on data patterns, trends, and key takeaways
     st.subheader("Data Analysis")
@@ -73,8 +59,12 @@ def main():
         # Add chatbot functionality
         user_input = st.text_input("Ask me anything about the spreadsheet:", "")
         if user_input:
-            chatbot_response = chatbot_response(user_input, df)
-            st.write(chatbot_response)
+            response = "Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n"
+            takeaways = analyze_spreadsheet(df)
+            response += "Key Takeaways:\n"
+            for takeaway in takeaways:
+                response += f"- {takeaway}\n"
+            st.write(response)
 
 if __name__ == "__main__":
     main()
