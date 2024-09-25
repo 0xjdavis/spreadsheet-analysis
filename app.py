@@ -50,7 +50,7 @@ def analyze_spreadsheet(df):
     # Ensure the date column is a valid datetime format and handle errors
     try:
         # Coerce invalid dates to NaT
-        df['Date'] = pd.to_datetime(df['Date'], format='%B %d, %Y at %I:%M %p', errors='coerce')
+        df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
         st.write("Successfully parsed the date column.")
     except Exception as e:
         st.write(f"Error parsing the date column: {e}")
@@ -94,9 +94,9 @@ def analyze_spreadsheet(df):
     
     # KPI 3 - Top 25 jurisdictions
     with col3:
-        st.subheader("Top 25 Referring Schools")
-        top_referrals = df.groupby(df.columns[4])[df.columns[1]].sum().sort_values(ascending=False).head(25)
-        fig = px.bar(top_referrals, x=top_referrals.index, y=top_referrals.values)
+        st.subheader("Top 25 Jurisdictions")
+        top_jurisdictions = df.groupby(df.columns[4])[df.columns[1]].sum().sort_values(ascending=False).head(25)
+        fig = px.bar(top_jurisdictions, x=top_jurisdictions.index, y=top_jurisdictions.values)
         st.plotly_chart(fig, use_container_width=True)
     
     # Generate dynamic key takeaways
@@ -122,24 +122,28 @@ def main():
     uploaded_file = st.file_uploader("Upload a spreadsheet", type=["xlsx", "csv"])
     
     if uploaded_file is not None:
-        # Load the spreadsheet data into a DataFrame
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(uploaded_file)
-        else:
-            df = pd.read_excel(uploaded_file)
-        
-        # User input for specific questions about the data
-        user_input = st.text_input("Ask me anything about the spreadsheet:", "")
-        
-        if user_input:
-            st.write("Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n")
-            with st.spinner("Analyzing the spreadsheet..."):
-                takeaways = analyze_spreadsheet(df)
+        try:
+            # Load the spreadsheet data into a DataFrame
+            if uploaded_file.name.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            else:
+                df = pd.read_excel(uploaded_file)
             
-            if takeaways is not None:
-                st.subheader("Key Takeaways")
-                for takeaway in takeaways:
-                    st.write(f"- {takeaway}")
+            # User input for specific questions about the data
+            user_input = st.text_input("Ask me anything about the spreadsheet:", "")
+            
+            if user_input:
+                st.write("Let me analyze the provided spreadsheet to help answer your question. Here's what I found:\n\n")
+                with st.spinner("Analyzing the spreadsheet..."):
+                    takeaways = analyze_spreadsheet(df)
+                
+                if takeaways is not None:
+                    st.subheader("Key Takeaways")
+                    for takeaway in takeaways:
+                        st.write(f"- {takeaway}")
+        except Exception as e:
+            st.error(f"An error occurred while processing the spreadsheet: {str(e)}")
+            st.write("Please check your spreadsheet format and try again.")
 
 if __name__ == "__main__":
     main()
