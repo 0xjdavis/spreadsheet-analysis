@@ -15,28 +15,28 @@ model = st.sidebar.selectbox(
 
 # System prompt for display
 system_prompt = '''
-You are the world's best data analysts. You are not only an INTP making up a small percentage of the personalities, but you are specially trained in graphic design and and engineering. Your clients include Apple, Microsoft and you were awarded recently for your contributions to the field of User Experience Design by Jakob Nielsen. 
+You are the world's best data analysts. You are not only an INTP making up a small percentage of the personalities, but you are specially trained in graphic design and engineering. Your clients include Apple, Microsoft and you were awarded recently for your contributions to the field of User Experience Design by Jakob Nielsen. 
 You have access to python library (pychart) and are a master designer when it comes to visualizing data in the form of data driven dashboards. 
-You can visualize data and flow using code interpreter and js librarires. 
+You can visualize data and flow using code interpreter and js libraries. 
 
 Help me make sense of this spreadsheet. 
-It is a list of people that hasve contacted us about tutoring and scheduled a call who purchased.
-This needs to be visualised in a chart over time. 
+It is a list of people that have contacted us about tutoring and scheduled a call who purchased.
+This needs to be visualized in a chart over time. 
 
-Create a dashboard where the top panel extends the entire witdth of the page but only half the height of the page.
+Create a dashboard where the top panel extends the entire width of the page but only half the height of the page.
 Fill that section of the page with whatever chart you think will tell the best story reflecting the data.
 The second half of the page should be divided into three different sections showing three KPI.
-- KPI 1 Top 25 individuals who purchased the most over time ranked, from most to least, the bar chart should have dollars spent on the y axis and Full Name - Year on the X axis.
-- KPI 2 Top 25 law schools attended by people who purchased the most over time, ranked from most to least.
-- KPI 3 Top 25 Jurisdiction that individuals who purchased the most over time were from, ranked from most to least.
+- KPI 1: Top 25 individuals who purchased the most over time ranked, from most to least, the bar chart should have dollars spent on the y axis and Full Name - Year on the X axis.
+- KPI 2: Top 25 law schools attended by people who purchased the most over time, ranked from most to least.
+- KPI 3: Top 25 jurisdictions that individuals who purchased the most over time were from, ranked from most to least.
 
 Look at the funnel over time. 
-- Identify trends and highlight them in your charts
-- Did first time takers of the BAR purchase more often than people who took it multiple times?
+- Identify trends and highlight them in your charts.
+- Did first-time takers of the BAR purchase more often than people who took it multiple times?
 - Are there any patterns in the type of help requested over time?
 - Display what is not obvious. Remember you see things others do not. Look harder to identify patterns.
 
-Are we getting more or less inquiries scheduled per inquiry, purchase per call/inquirey, etc...
+Are we getting more or less inquiries scheduled per inquiry, purchase per call/inquiry, etc...
 Tell me what is and is not obvious.
 '''
 
@@ -68,6 +68,9 @@ def analyze_spreadsheet(df):
         st.write(f"Warning: {missing_dates} rows have invalid or missing dates and will be excluded.")
         df = df.dropna(subset=['Date'])
 
+    # Check that we have valid monetary values for the KPIs
+    df[df.columns[1]] = pd.to_numeric(df[df.columns[1]], errors='coerce')
+
     # Generate visual insights using Plotly
     st.subheader("Visual Insights")
 
@@ -81,25 +84,25 @@ def analyze_spreadsheet(df):
     # Lower panel - KPI visualizations
     col1, col2, col3 = st.columns(3)
 
-    # KPI 1 - Top 10 individuals who purchased the most
+    # KPI 1 - Top 25 individuals who purchased the most
     with col1:
         st.subheader("Top 25 Purchasers")
-        top_purchasers = df.groupby(df.columns[2]).size().sort_values(ascending=False).head(25)
+        top_purchasers = df.groupby(df.columns[2])[df.columns[1]].sum().sort_values(ascending=False).head(25)
         fig = px.bar(top_purchasers, x=top_purchasers.index, y=top_purchasers.values)
         st.plotly_chart(fig, use_container_width=True)
 
-    # KPI 2 - Top 10 law schools attended
+    # KPI 2 - Top 25 law schools attended
     with col2:
         st.subheader("Top 25 Law Schools")
-        top_law_schools = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(25)
+        top_law_schools = df.groupby(df.columns[3])[df.columns[1]].sum().sort_values(ascending=False).head(25)
         fig = px.bar(top_law_schools, x=top_law_schools.index, y=top_law_schools.values)
         st.plotly_chart(fig, use_container_width=True)
 
-    # KPI 3 - Top 10 countries
+    # KPI 3 - Top 25 jurisdictions
     with col3:
-        st.subheader("Top 25 School Referrals")
-        top_referrals = df.groupby(df.columns[3]).size().sort_values(ascending=False).head(25)
-        fig = px.bar(top_referrals, x=top_referrals.index, y=top_referrals.values)
+        st.subheader("Top 25 Jurisdictions")
+        top_jurisdictions = df.groupby(df.columns[4])[df.columns[1]].sum().sort_values(ascending=False).head(25)
+        fig = px.bar(top_jurisdictions, x=top_jurisdictions.index, y=top_jurisdictions.values)
         st.plotly_chart(fig, use_container_width=True)
 
     # Generate dynamic key takeaways
